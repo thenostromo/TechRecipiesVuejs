@@ -1,3 +1,6 @@
+import firebase from 'firebase'
+import firestore from 'firebase/firestore'
+
 var firebaseConfig = {
   apiKey: "AIzaSyCtVKgBwCtEkGUhKACTkhhHprVxJw4330A",
   authDomain: "tech-recipies-vuejs.firebaseapp.com",
@@ -7,4 +10,8 @@ var firebaseConfig = {
   messagingSenderId: "999949132260",
   appId: "1:999949132260:web:f3cc4267ae424b1a"
 };
-firebase.initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+//firebaseApp.firestore().settings({ timestampsInSnapshots: true })
+
+// export firestore database
+export default firebaseApp.firestore()

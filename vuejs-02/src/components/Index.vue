@@ -16,47 +16,46 @@
           </ul>
         </h2>
       </div>
+      <span class="btn-floating btn-large halfway-fab pink">
+        <router-link :to="{ name: 'EditRecipe', params: { recipe_slug: recipe.slug }}">
+          <i class="material-icons edit">edit</i>
+        </router-link>
+      </span>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'Index',
-  data () {
-    return {
-      recipies: [
-        {
-          title: 'Symfony 4',
-          slug: 'symfony-4',
-          keywords: [
-              'twig',
-              'doctrine',
-              'php'
-          ],
-          id: '1'
-        },
-        {
-          title: 'Spring Framework',
-          slug: 'spring-framework',
-          keywords: [
-              'java',
-              'hibernate',
-              'rmi'
-          ],
-          id: '2'
-        }
-      ]
-    }
-  },
+  import db from '@/firebase/init'
+
+  export default {
+    name: 'Index',
+    data () {
+      return {
+        recipies: []
+      }
+    },
     methods: {
       deleteRecipe(id) {
-        this.recipies = this.recipies.filter(recipe => {
-            return recipe.id != id
-        })
+        db.collection('recipies').doc(id).delete()
+          .then(() => {
+            this.recipies = this.recipies.filter(recipe => {
+                return recipe.id != id
+            })
+          })
       }
+    },
+    created() {
+      db.collection('recipies').get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            let recipe = doc.data()
+            recipe.id = doc.id
+            this.recipies.push(recipe)
+          })
+        })
     }
-}
+  }
 </script>
 
 <style>
